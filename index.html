@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simply Fit AI — Your Personal AI Fitness Coach</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #0E0E0E; color: #F0EDE8; }
+
+    /* HEADER */
+    .header { padding: 1.5rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #1A1A1A; }
+    .logo { display: inline-flex; align-items: center; gap: 9px; }
+    .logo-mark { width: 34px; height: 34px; background: #C8F135; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 19px; color: #0E0E0E; }
+    .logo-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.07em; color: #F0EDE8; }
+    .logo-ai { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.07em; color: #C8F135; }
+
+    /* HERO */
+    .hero { padding: 2.5rem 1.5rem 2rem; text-align: center; border-bottom: 1px solid #1A1A1A; }
+    .eyebrow { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #C8F135; margin-bottom: 0.65rem; font-weight: 500; }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 10vw, 5rem); line-height: 0.93; letter-spacing: 0.02em; color: #F0EDE8; margin-bottom: 1rem; }
+    .hero h1 span { color: #C8F135; }
+    .hero p { font-size: 0.92rem; color: #777; font-weight: 300; max-width: 360px; margin: 0 auto 1.75rem; line-height: 1.65; }
+    .price-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 1.25rem; }
+    .price-num { font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; color: #C8F135; line-height: 1; }
+    .price-meta { text-align: left; font-size: 0.72rem; color: #555; line-height: 1.6; }
+    .price-meta strong { color: #888; display: block; font-weight: 400; }
+    .cta-btn { display: block; width: 100%; max-width: 320px; margin: 0 auto 0.6rem; padding: 16px; background: #C8F135; color: #0E0E0E; border: none; border-radius: 6px; font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.08em; cursor: pointer; text-decoration: none; text-align: center; }
+    .cta-btn:hover { background: #d4f542; }
+    .sub-note { font-size: 0.7rem; color: #3A3A3A; text-align: center; letter-spacing: 0.04em; }
+
+    /* STATS */
+    .stats-bar { display: flex; border-top: 1px solid #1A1A1A; border-bottom: 1px solid #1A1A1A; }
+    .stat { flex: 1; padding: 1.25rem 0.5rem; text-align: center; border-right: 1px solid #1A1A1A; }
+    .stat:last-child { border-right: none; }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: #C8F135; }
+    .stat-label { font-size: 0.68rem; color: #555; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+    /* FEATURES */
+    .features { padding: 2.5rem 1.5rem; background: #0E0E0E; max-width: 700px; margin: 0 auto; }
+    .section-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #C8F135; margin-bottom: 1rem; font-weight: 500; }
+    .feat-list { display: flex; flex-direction: column; gap: 10px; }
+    .feat-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px; background: #141414; border-radius: 8px; border: 1px solid #1E1E1E; }
+    .feat-num { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: #C8F135; min-width: 24px; }
+    .feat-title { font-size: 0.9rem; font-weight: 500; color: #F0EDE8; margin-bottom: 3px; }
+    .feat-desc { font-size: 0.77rem; color: #555; line-height: 1.5; }
+
+    /* CHAT */
+    .chat-section { padding: 2.5rem 1.5rem; background: #0A0A0A; border-top: 1px solid #1A1A1A; max-width: 700px; margin: 0 auto; }
+    .chat-window { background: #141414; border-radius: 12px; border: 1px solid #1E1E1E; padding: 1rem; display: flex; flex-direction: column; gap: 10px; margin: 1rem 0; min-height: 200px; }
+    .msg { display: flex; align-items: flex-end; gap: 8px; }
+    .msg.user { flex-direction: row-reverse; }
+    .av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .av.ai { background: #C8F135; color: #0E0E0E; font-family: 'Bebas Neue', sans-serif; font-size: 13px; }
+    .av.me { background: #1E1E1E; color: #666; font-size: 11px; }
+    .bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 0.82rem; line-height: 1.5; }
+    .ai .bubble { background: #1A1A1A; color: #CCC; border: 1px solid #222; border-bottom-left-radius: 4px; }
+    .user .bubble { background: #C8F135; color: #0E0E0E; border-bottom-right-radius: 4px; font-weight: 500; }
+    .chat-input-row { display: flex; gap: 8px; align-items: center; }
+    .chat-input { flex: 1; padding: 11px 15px; border-radius: 50px; border: 1px solid #222; background: #141414; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: #F0EDE8; outline: none; }
+    .chat-input::placeholder { color: #444; }
+    .send-btn { width: 38px; height: 38px; border-radius: 50%; background: #C8F135; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #0E0E0E; font-size: 16px; flex-shrink: 0; }
+    .lock-box { background: #0E0E0E; border: 1px solid #222; border-radius: 10px; padding: 16px; margin-top: 12px; text-align: center; display: none; }
+    .lock-box p { font-size: 0.8rem; color: #666; margin-bottom: 10px; line-height: 1.6; }
+    .lock-btn { display: inline-block; padding: 12px 30px; background: #C8F135; color: #0E0E0E; border: none; border-radius: 6px; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.06em; cursor: pointer; text-decoration: none; }
+
+    /* TESTIMONIAL */
+    .testimonial { padding: 2.5rem 1.5rem; background: #0E0E0E; border-top: 1px solid #1A1A1A; max-width: 700px; margin: 0 auto; }
+    .quote { font-size: 0.9rem; color: #666; font-style: italic; line-height: 1.7; margin-bottom: 0.75rem; border-left: 2px solid #C8F135; padding-left: 16px; }
+    .quoter { font-size: 0.72rem; color: #444; text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* FOOTER */
+    .footer { background: #080808; border-top: 1px solid #1A1A1A; padding: 2rem 1.5rem; text-align: center; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: #F0EDE8; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .footer-logo span { color: #C8F135; }
+    .footer-sub { font-size: 0.7rem; color: #333; letter-spacing: 0.06em; line-height: 1.8; }
+
+    /* TYPING */
+    .typing-dot { display: inline-block; width: 5px; height: 5px; background: #444; border-radius: 50%; animation: blink 1.2s infinite; margin: 0 1px; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+    /* PAYWALL PAGE */
+    #paywall-page { display: none; min-height: 100vh; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 2rem; }
+    #paywall-page.active { display: flex; }
+    #main-page.hidden { display: none; }
+
+    /* CHAT APP PAGE */
+    #chatapp-page { display: none; flex-direction: column; height: 100vh; }
+    #chatapp-page.active { display: flex; }
+    .chatapp-header { padding: 1rem 1.5rem; border-bottom: 1px solid #1A1A1A; display: flex; align-items: center; gap: 10px; }
+    .chatapp-messages { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 12px; }
+    .chatapp-input-area { padding: 1rem 1.5rem; border-top: 1px solid #1A1A1A; display: flex; gap: 8px; }
+    .chatapp-input { flex: 1; padding: 12px 16px; border-radius: 50px; border: 1px solid #222; background: #141414; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; color: #F0EDE8; outline: none; }
+    .chatapp-send { width: 42px; height: 42px; border-radius: 50%; background: #C8F135; border: none; cursor: pointer; color: #0E0E0E; font-size: 18px; flex-shrink: 0; }
+    .loading-msg { color: #444; font-size: 0.8rem; font-style: italic; }
+  </style>
+</head>
+<body>
+
+<!-- MAIN LANDING PAGE -->
+<div id="main-page">
+
+  <div class="header">
+    <div class="logo">
+      <div class="logo-mark">SF</div>
+      <span class="logo-name">SIMPLY FIT&nbsp;</span><span class="logo-ai">AI</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Your personal AI fitness coach</div>
+    <h1>TRAIN<br>SMARTER.<br><span>GET RESULTS.</span></h1>
+    <p>Strength plans, nutrition advice & real-time coaching — powered by AI, tailored to you. Available 24/7.</p>
+    <div class="price-row">
+      <div class="price-num">$5</div>
+      <div class="price-meta"><strong>One-time payment</strong>Unlimited access.<br>No subscription. Ever.</div>
+    </div>
+    <a href="/api/checkout" class="cta-btn">GET UNLIMITED ACCESS</a>
+    <div class="sub-note">ONE PAYMENT · LIFETIME ACCESS · CANCEL NOTHING</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="member-count">0</div><div class="stat-label">Members</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Available</div></div>
+    <div class="stat"><div class="stat-num">$5</div><div class="stat-label">Forever</div></div>
+  </div>
+
+  <div style="max-width:700px;margin:0 auto;width:100%;">
+    <div class="features">
+      <div class="section-label">What you get</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="feat-num">01</div><div><div class="feat-title">Custom strength programs</div><div class="feat-desc">Workouts built around your goals, schedule and equipment — beginner to advanced.</div></div></div>
+        <div class="feat-item"><div class="feat-num">02</div><div><div class="feat-title">Nutrition & macro guidance</div><div class="feat-desc">Calories, protein targets, meal timing — all explained in plain English.</div></div></div>
+        <div class="feat-item"><div class="feat-num">03</div><div><div class="feat-title">Form & technique tips</div><div class="feat-desc">Ask about any exercise and get clear, safe breakdowns instantly.</div></div></div>
+        <div class="feat-item"><div class="feat-num">04</div><div><div class="feat-title">Progress check-ins</div><div class="feat-desc">Chat through plateaus, adjust your plan and stay accountable.</div></div></div>
+      </div>
+    </div>
+
+    <div class="chat-section">
+      <div class="section-label">Try it free — 2 questions on us</div>
+      <div class="chat-window" id="chatWin">
+        <div class="msg ai"><div class="av ai">SF</div><div class="bubble">Hey! I'm your Simply Fit AI coach. Tell me your goal — build muscle, lose fat, or improve strength?</div></div>
+        <div class="msg user"><div class="av me">U</div><div class="bubble">I want to build muscle but I only have 3 days a week</div></div>
+        <div class="msg ai"><div class="av ai">SF</div><div class="bubble">3 days is plenty! A full-body split 3x per week is actually optimal for muscle growth. Want me to build you a program?</div></div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="demoInput" placeholder="Ask Simply Fit AI anything..." />
+        <button class="send-btn" onclick="handleDemo()">↑</button>
+      </div>
+      <div class="lock-box" id="lockBox">
+        <p>You've used your 2 free questions.<br>Unlock unlimited coaching for a one-time payment of just <strong style="color:#C8F135;">$5</strong> — no subscription, ever.</p>
+        <a href="/api/checkout" class="lock-btn">UNLOCK FOR $5</a>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <div class="section-label">Real results</div>
+      <div class="quote">"Put on 8 lbs of muscle in 10 weeks following the program Simply Fit AI built me. Worth every penny of that $5."</div>
+      <div class="quoter">— Jake R., verified member</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">SIMPLY FIT <span>AI</span></div>
+    <div class="footer-sub">SEEN ON TIKTOK · QUESTIONS? DM US<br>ONE-TIME $5 · LIFETIME ACCESS · simplyfitai.co</div>
+  </div>
+
+</div>
+
+<!-- FULL CHAT APP (shown after payment) -->
+<div id="chatapp-page">
+  <div class="chatapp-header">
+    <div class="logo-mark" style="width:30px;height:30px;background:#C8F135;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#0E0E0E;">SF</div>
+    <span style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.06em;">SIMPLY FIT <span style="color:#C8F135;">AI</span></span>
+    <span style="margin-left:auto;font-size:0.72rem;color:#444;letter-spacing:0.06em;">UNLIMITED ACCESS</span>
+  </div>
+  <div class="chatapp-messages" id="appMessages">
+    <div class="msg ai"><div class="av ai">SF</div><div class="bubble">Welcome! You now have unlimited access. I'm your personal Simply Fit AI coach — ask me anything about training, nutrition, or your fitness goals. Let's get to work! 💪</div></div>
+  </div>
+  <div class="chatapp-input-area">
+    <input class="chatapp-input" id="appInput" placeholder="Ask your coach anything..." />
+    <button class="chatapp-send" onclick="handleAppChat()">↑</button>
+  </div>
+</div>
+
+<script>
+  // ── Demo chat (landing page) ──────────────────────────────────────────────
+  let demoCount = 0;
+
+  document.getElementById('demoInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleDemo();
+  });
+
+  function handleDemo() {
+    const input = document.getElementById('demoInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const win = document.getElementById('chatWin');
+    appendMsg(win, 'user', text);
+    input.value = '';
+    demoCount++;
+
+    if (demoCount >= 2) {
+      document.getElementById('lockBox').style.display = 'block';
+      appendMsg(win, 'ai', '🔒 You\'ve hit the free limit — unlock full access for $5 to continue!');
+      input.disabled = true;
+    } else {
+      const typing = appendMsg(win, 'ai', '');
+      typing.querySelector('.bubble').innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, mode: 'demo' })
+      })
+      .then(r => r.json())
+      .then(d => { typing.querySelector('.bubble').textContent = d.reply; })
+      .catch(() => { typing.querySelector('.bubble').textContent = 'Sorry, something went wrong. Try again!'; });
+    }
+    win.scrollTop = win.scrollHeight;
+  }
+
+  // ── Full chat app ─────────────────────────────────────────────────────────
+  let appHistory = [];
+
+  document.getElementById('appInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleAppChat();
+  });
+
+  async function handleAppChat() {
+    const input = document.getElementById('appInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const msgs = document.getElementById('appMessages');
+    appendMsg(msgs, 'user', text);
+    input.value = '';
+    appHistory.push({ role: 'user', content: text });
+
+    const typing = appendMsg(msgs, 'ai', '');
+    typing.querySelector('.bubble').innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    msgs.scrollTop = msgs.scrollHeight;
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history: appHistory, mode: 'full' })
+      });
+      const data = await res.json();
+      typing.querySelector('.bubble').textContent = data.reply;
+      appHistory.push({ role: 'assistant', content: data.reply });
+    } catch {
+      typing.querySelector('.bubble').textContent = 'Something went wrong — please try again.';
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function appendMsg(container, role, text) {
+    const div = document.createElement('div');
+    div.className = `msg ${role === 'user' ? 'user' : 'ai'}`;
+    div.innerHTML = role === 'user'
+      ? `<div class="av me">U</div><div class="bubble">${text}</div>`
+      : `<div class="av ai">SF</div><div class="bubble">${text}</div>`;
+    container.appendChild(div);
+    return div;
+  }
+
+  // ── Check if user has paid (via URL param after Stripe redirect) ──────────
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === 'true') {
+    document.getElementById('main-page').classList.add('hidden');
+    document.getElementById('chatapp-page').classList.add('active');
+  }
+
+  // ── Live member count ─────────────────────────────────────────────────────
+  fetch('/api/member-count')
+    .then(r => r.json())
+    .then(d => { document.getElementById('member-count').textContent = d.count.toLocaleString(); })
+    .catch(() => {});
+</script>
+</body>
+</html>
