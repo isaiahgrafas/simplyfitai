@@ -216,7 +216,7 @@
         body: JSON.stringify({ message: text, history: [], mode: 'demo' })
       })
       .then(r => r.json())
-      .then(d => { typing.querySelector('.bubble').textContent = d.reply; })
+      .then(d => { typing.querySelector('.bubble').innerHTML = d.reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/#{1,6} /g, '').replace(/\n/g, '<br>'); })
       .catch(() => { typing.querySelector('.bubble').textContent = 'Sorry, something went wrong. Try again!'; });
     }
     win.scrollTop = win.scrollHeight;
