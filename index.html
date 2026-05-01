@@ -214,7 +214,7 @@
       fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, mode: 'demo' })
+        body: JSON.stringify({ message: text, history: [], mode: 'demo' })
       })
       .then(r => r.json())
       .then(d => { typing.querySelector('.bubble').textContent = d.reply; })
