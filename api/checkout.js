@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?paid=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success.html`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/`,
     });
 
