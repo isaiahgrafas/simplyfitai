@@ -124,6 +124,24 @@
 
 <script>
   let history = [];
+let profile = {};
+
+function extractProfile(message) {
+  const lower = message.toLowerCase();
+  if (lower.includes('bodyweight') || lower.includes('no equipment') || lower.includes('no gym')) profile.equipment = 'bodyweight only';
+  if (lower.includes('dumbbells')) profile.equipment = 'dumbbells available';
+  if (lower.includes('gym')) profile.equipment = 'gym access';
+  if (lower.includes('lose weight') || lower.includes('fat loss') || lower.includes('lose fat')) profile.goal = 'fat loss';
+  if (lower.includes('build muscle') || lower.includes('gain muscle') || lower.includes('bulk')) profile.goal = 'muscle building';
+  if (lower.includes('get stronger') || lower.includes('strength')) profile.goal = 'strength';
+  if (lower.includes('beginner') || lower.includes('just started')) profile.level = 'beginner';
+  if (lower.includes('intermediate')) profile.level = 'intermediate';
+  if (lower.includes('advanced')) profile.level = 'advanced';
+  if (lower.includes('vegan')) profile.diet = 'vegan';
+  if (lower.includes('vegetarian')) profile.diet = 'vegetarian';
+  if (lower.match(/(\d+) days a week/)) profile.schedule = lower.match(/(\d+) days a week/)[0];
+  if (lower.includes('injury') || lower.includes('bad knee') || lower.includes('bad back') || lower.includes('bad shoulder')) profile.injuries = message;
+}
 
   document.getElementById('chatInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') sendMessage();
