@@ -161,6 +161,7 @@ function extractProfile(message) {
     const msgs = document.getElementById('messages');
     appendMsg(msgs, 'user', text);
     input.value = '';
+    extractProfile(text);
     history.push({ role: 'user', content: text });
     document.getElementById('suggestions').style.display = 'none';
 
@@ -172,7 +173,7 @@ function extractProfile(message) {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, history: history.slice(-10) })
+        body: JSON.stringify({ message: text, history: history.slice(-10), profile })
       });
       const data = await res.json();
       const formatted = data.reply
