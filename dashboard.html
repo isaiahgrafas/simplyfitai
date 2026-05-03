@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isaiah — Finance Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0E0E0E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Isaiah Finance">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #0E0E0E; color: #F0EDE8; min-height: 100vh; padding-bottom: 2rem; }
+
+    .header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #1A1A1A; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #0E0E0E; z-index: 10; }
+    .header-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.08em; color: #F0EDE8; }
+    .header-logo span { color: #C8F135; }
+    .header-date { font-size: 0.72rem; color: #444; letter-spacing: 0.06em; }
+
+    .wrap { max-width: 600px; margin: 0 auto; padding: 1.5rem; }
+
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .card { background: #141414; border: 1px solid #1E1E1E; border-radius: 12px; padding: 1rem; }
+    .card-label { font-size: 11px; color: #555; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+    .card-val { font-size: 1.5rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+    .card-val.pos { color: #C8F135; }
+    .card-val.neg { color: #E24B4A; }
+    .card-val.neu { color: #F0EDE8; }
+    .card-sub { font-size: 11px; color: #444; margin-top: 3px; }
+
+    .section { background: #141414; border: 1px solid #1E1E1E; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+    .section-title { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #555; margin-bottom: 1rem; font-weight: 500; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-full { grid-column: 1 / -1; }
+    select, input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #222; background: #0E0E0E; color: #F0EDE8; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; outline: none; }
+    select:focus, input:focus { border-color: #C8F135; }
+
+    .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.06em; cursor: pointer; margin-top: 6px; }
+    .btn-primary { background: #C8F135; color: #0E0E0E; }
+    .btn-primary:active { opacity: 0.85; }
+
+    .sf-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1A1A1A; }
+    .sf-row:last-child { border-bottom: none; }
+    .sf-label { font-size: 0.8rem; color: #666; }
+    .sf-val { font-size: 0.85rem; font-weight: 500; }
+    .sf-val.pos { color: #C8F135; }
+    .sf-val.neg { color: #E24B4A; }
+
+    .tabs { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tab { font-size: 11px; padding: 5px 12px; border-radius: 20px; border: 1px solid #222; background: transparent; color: #555; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    .tab.active { background: #C8F135; color: #0E0E0E; border-color: #C8F135; font-weight: 500; }
+
+    .tx-list { display: flex; flex-direction: column; gap: 6px; }
+    .tx-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #0E0E0E; border-radius: 8px; border: 1px solid #1A1A1A; }
+    .tx-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .tx-desc { flex: 1; font-size: 0.82rem; color: #F0EDE8; }
+    .tx-meta { font-size: 0.7rem; color: #444; margin-top: 2px; }
+    .tx-amt { font-size: 0.85rem; font-weight: 500; min-width: 70px; text-align: right; }
+    .tx-del { font-size: 11px; color: #333; cursor: pointer; padding: 3px 6px; border-radius: 4px; border: none; background: transparent; }
+    .tx-del:hover { color: #E24B4A; }
+    .tx-empty { font-size: 0.8rem; color: #444; text-align: center; padding: 2rem 0; }
+
+    .chart-wrap { position: relative; width: 100%; height: 180px; margin-top: 0.5rem; }
+
+    .rate-note { font-size: 0.7rem; color: #444; text-align: center; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">ISAIAH <span>FINANCE</span></div>
+  <div class="header-date" id="header-date"></div>
+</div>
+
+<div class="wrap">
+
+  <div class="cards">
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-label">Net balance</div>
+      <div class="card-val neu" id="card-balance">NZD $0.00</div>
+      <div class="card-sub" id="card-sub">No transactions yet</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Total in</div>
+      <div class="card-val pos" id="card-in">$0.00</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Total out</div>
+      <div class="card-val neg" id="card-out">$0.00</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Simply Fit AI</div>
+      <div class="card-val pos" id="card-sf">$0.00</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Net profit SF</div>
+      <div class="card-val pos" id="card-sfnet">$0.00</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Simply Fit AI breakdown</div>
+    <div class="sf-row"><span class="sf-label">Total sales</span><span class="sf-val pos" id="sf-sales">0 sales</span></div>
+    <div class="sf-row"><span class="sf-label">Gross revenue (NZD)</span><span class="sf-val pos" id="sf-gross">$0.00</span></div>
+    <div class="sf-row"><span class="sf-label">Stripe fees est.</span><span class="sf-val neg" id="sf-fees">-$0.00</span></div>
+    <div class="sf-row"><span class="sf-label">Anthropic API est.</span><span class="sf-val neg" id="sf-api">-$0.00</span></div>
+    <div class="sf-row"><span class="sf-label">Net profit</span><span class="sf-val pos" id="sf-net">$0.00</span></div>
+    <div class="rate-note">💡 Log Simply Fit AI sales in NZD — approx $8.50 NZD per $5 USD sale</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Add transaction</div>
+    <div class="form-grid">
+      <select id="tx-type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+      <select id="tx-cat">
+        <option value="Simply Fit AI">Simply Fit AI</option>
+        <option value="TikTok">TikTok</option>
+        <option value="Other income">Other income</option>
+        <option value="Ads spend">Ads spend</option>
+        <option value="Subscriptions">Subscriptions</option>
+        <option value="Domain/Hosting">Domain/Hosting</option>
+        <option value="Food">Food</option>
+        <option value="Transport">Transport</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+      </select>
+      <input type="text" id="tx-desc" placeholder="Description (optional)" class="form-full" />
+      <input type="number" id="tx-amt" placeholder="Amount (NZD)" min="0" step="0.01" />
+      <input type="date" id="tx-date" />
+      <button class="btn btn-primary form-full" onclick="addTx()">ADD TRANSACTION</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transactions</div>
+    <div class="tabs">
+      <button class="tab active" onclick="filterTx('all', this)">All</button>
+      <button class="tab" onclick="filterTx('income', this)">Income</button>
+      <button class="tab" onclick="filterTx('expense', this)">Expenses</button>
+      <button class="tab" onclick="filterTx('Simply Fit AI', this)">Simply Fit AI</button>
+    </div>
+    <div class="tx-list" id="tx-list">
+      <div class="tx-empty">No transactions yet</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Monthly overview</div>
+    <div class="chart-wrap">
+      <canvas id="monthChart" role="img" aria-label="Monthly income and expenses">No data yet.</canvas>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  let txns = JSON.parse(localStorage.getItem('isaiah-finance-v2') || '[]');
+  let currentFilter = 'all';
+  let monthChart = null;
+
+  document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  document.getElementById('tx-date').value = new Date().toISOString().split('T')[0];
+
+  function save() { localStorage.setItem('isaiah-finance-v2', JSON.stringify(txns)); }
+  function fmt(n) { return '$' + Math.abs(n).toFixed(2); }
+
+  function addTx() {
+    const type = document.getElementById('tx-type').value;
+    const cat = document.getElementById('tx-cat').value;
+    const desc = document.getElementById('tx-desc').value.trim() || cat;
+    const amt = parseFloat(document.getElementById('tx-amt').value);
+    const date = document.getElementById('tx-date').value || new Date().toISOString().split('T')[0];
+    if (!amt || amt <= 0) { alert('Please enter a valid amount'); return; }
+    txns.unshift({ id: Date.now(), type, cat, desc, amt, date });
+    save();
+    document.getElementById('tx-desc').value = '';
+    document.getElementById('tx-amt').value = '';
+    render();
+  }
+
+  function deleteTx(id) {
+    if (!confirm('Delete this transaction?')) return;
+    txns = txns.filter(t => t.id !== id);
+    save();
+    render();
+  }
+
+  function filterTx(f, el) {
+    currentFilter = f;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    render();
+  }
+
+  function render() {
+    const totalIn = txns.filter(t => t.type === 'income').reduce((s, t) => s + t.amt, 0);
+    const totalOut = txns.filter(t => t.type === 'expense').reduce((s, t) => s + t.amt, 0);
+    const balance = totalIn - totalOut;
+    const sfTxns = txns.filter(t => t.cat === 'Simply Fit AI' && t.type === 'income');
+    const sfGross = sfTxns.reduce((s, t) => s + t.amt, 0);
+    const sfSales = sfTxns.length;
+    const sfFees = sfGross * 0.029 + (sfSales * 0.30 * 1.70);
+    const sfApi = sfSales * 0.085;
+    const sfNet = sfGross - sfFees - sfApi;
+
+    document.getElementById('card-balance').textContent = 'NZD ' + fmt(balance);
+    document.getElementById('card-balance').className = 'card-val ' + (balance >= 0 ? 'pos' : 'neg');
+    document.getElementById('card-sub').textContent = txns.length + ' transactions logged';
+    document.getElementById('card-in').textContent = 'NZD ' + fmt(totalIn);
+    document.getElementById('card-out').textContent = 'NZD ' + fmt(totalOut);
+    document.getElementById('card-sf').textContent = 'NZD ' + fmt(sfGross);
+    document.getElementById('card-sfnet').textContent = 'NZD ' + fmt(Math.max(0, sfNet));
+    document.getElementById('sf-sales').textContent = sfSales + ' sales';
+    document.getElementById('sf-gross').textContent = 'NZD ' + fmt(sfGross);
+    document.getElementById('sf-fees').textContent = '-NZD ' + fmt(sfFees);
+    document.getElementById('sf-api').textContent = '-NZD ' + fmt(sfApi);
+    document.getElementById('sf-net').textContent = 'NZD ' + fmt(Math.max(0, sfNet));
+
+    const filtered = currentFilter === 'all' ? txns :
+      currentFilter === 'income' ? txns.filter(t => t.type === 'income') :
+      currentFilter === 'expense' ? txns.filter(t => t.type === 'expense') :
+      txns.filter(t => t.cat === currentFilter);
+
+    const list = document.getElementById('tx-list');
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="tx-empty">No transactions here yet</div>';
+    } else {
+      list.innerHTML = filtered.map(t => `
+        <div class="tx-item">
+          <div class="tx-dot" style="background:${t.type === 'income' ? '#C8F135' : '#E24B4A'}"></div>
+          <div style="flex:1;min-width:0;">
+            <div class="tx-desc">${t.desc}</div>
+            <div class="tx-meta">${t.cat} · ${t.date}</div>
+          </div>
+          <div class="tx-amt" style="color:${t.type === 'income' ? '#C8F135' : '#E24B4A'}">
+            ${t.type === 'income' ? '+' : '-'}${fmt(t.amt)}
+          </div>
+          <button class="tx-del" onclick="deleteTx(${t.id})">✕</button>
+        </div>
+      `).join('');
+    }
+
+    renderChart();
+  }
+
+  function renderChart() {
+    const months = {};
+    txns.forEach(t => {
+      const m = t.date.slice(0, 7);
+      if (!months[m]) months[m] = { in: 0, out: 0 };
+      if (t.type === 'income') months[m].in += t.amt;
+      else months[m].out += t.amt;
+    });
+    const labels = Object.keys(months).sort().slice(-6);
+    const inData = labels.map(m => parseFloat(months[m].in.toFixed(2)));
+    const outData = labels.map(m => parseFloat(months[m].out.toFixed(2)));
+
+    if (monthChart) monthChart.destroy();
+    monthChart = new Chart(document.getElementById('monthChart'), {
+      type: 'bar',
+      data: {
+        labels: labels.map(m => new Date(m + '-01').toLocaleString('default', { month: 'short', year: '2-digit' })),
+        datasets: [
+          { label: 'Income', data: inData, backgroundColor: '#C8F135', borderRadius: 4 },
+          { label: 'Expenses', data: outData, backgroundColor: '#E24B4A', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#555', font: { size: 11 } } },
+          y: { grid: { color: '#1A1A1A' }, ticks: { color: '#555', font: { size: 11 }, callback: v => '$' + v } }
+        }
+      }
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>
